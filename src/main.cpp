@@ -60,18 +60,7 @@ void targetObject() {
 void getRange() {
   while (RangeFinder9A.distance(mm) > 50) {
     //Drivetrain.drive(forward);
-    Brain.Screen.setFont(mono40);
-    Brain.Screen.clearLine(3, black);
-    Brain.Screen.setCursor(3, 1);
-    Controller1.Screen.setCursor(3, 1);
-    Brain.Screen.print("%.2f", RangeFinder9A.distance(mm));
-    Controller1.Screen.print("%.2f", RangeFinder9A.distance(mm));
-    wait(200, msec);
-    Brain.Screen.setCursor(3, 1);
-    Controller1.Screen.setCursor(3, 1);
-    Brain.Screen.clearScreen();
-    Controller1.Screen.clearScreen();
-    wait(5, msec);
+    // get distance
   }
 }
 
