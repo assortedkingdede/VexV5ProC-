@@ -59,8 +59,7 @@ void targetObject() {
 
 void getRange() {
   while (RangeFinder9A.distance(mm) > 50) {
-    //Drivetrain.drive(forward);
-    // get distance
+    //get distance
   }
 }
 
