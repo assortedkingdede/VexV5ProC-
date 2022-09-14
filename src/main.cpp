@@ -96,19 +96,6 @@ void hasMagentaCallback() { //Add target object somewhere when ready
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-  printf("Starting Program....");
-  printf("/n");
-  printf("Brain Battery Capacity");
-  printf("%.2f", (double)Brain.Battery.capacity());
-  printf(" Volts");
-  printf("/n");
-  printf("Nominal Voltage: 12.8 V");
-  printf("/n");
-  printf("Current Voltage: ");
-  printf("%.2f", (double)Brain.Battery.voltage());
-  printf("/n");
-  wait(2,sec);
-  Controller1.Screen.clearScreen();
   checkMagenta(hasMagentaCallback);
   checkDistance(getRange);
   
