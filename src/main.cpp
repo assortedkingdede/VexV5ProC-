@@ -50,6 +50,8 @@ void targetObject() {
     // object is found and centered
     if( Vision10.largestObject.centerY > (TARGET-15) && Vision10.largestObject.centerY < (TARGET+15) ) {
       driveTurn(0);
+      getRange();
+      //Move forward based on distance from target, account for length of robot.
     }
     else {
       driveTurn( drive ); //What does drive do?
