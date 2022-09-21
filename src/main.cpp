@@ -28,6 +28,13 @@ event checkMagenta = event();
 event checkGreen = event();
 event checkDistance = event();
 
+void detection(){
+  wait(1, seconds);
+  double travel = rangeFinder9A.distance(inches);
+  double move = travel - 20;
+  Drivetrain.driveFor(forward, move, inches);
+}
+
 void visionLocation() {
   printf("CenterX: ");
   printf("%.2f", (double)Vision10.largestObject.centerX); 
