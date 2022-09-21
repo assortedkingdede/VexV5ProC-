@@ -61,7 +61,7 @@ void targetObject() {
       //Move forward based on distance from target, account for length of robot.
     }
     else {
-      driveTurn( drive ); //What does drive do?
+      driveTurn(drive); //What does drive do?
     }
 }
 
@@ -76,7 +76,6 @@ void hasMagentaCallback() { //Add target object somewhere when ready
   if (Vision10.objectCount > 0) {
     Brain.Screen.print("Magenta Object Found");
     Controller1.Screen.print("Magenta Object Found");
-    visionLocation();
   } else {
     Brain.Screen.print("No Magenta Object");
     Controller1.Screen.print("No Magenta Object");
@@ -87,12 +86,11 @@ int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   Drivetrain.setDriveVelocity(25, percent);
-  checkMagenta(hasMagentaCallback);
-  checkDistance(getRange);
+  targetObject();
+  //checkMagenta(hasMagentaCallback);
   
   while (true) {
     checkMagenta.broadcastAndWait();
-    checkDistance.broadcastAndWait();
     wait(1, seconds);
   }
 }
