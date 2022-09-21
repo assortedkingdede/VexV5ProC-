@@ -86,6 +86,7 @@ void hasMagentaCallback() { //Add target object somewhere when ready
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
+  Drivetrain.setDriveVelocity(25, percent);
   checkMagenta(hasMagentaCallback);
   checkDistance(getRange);
   
