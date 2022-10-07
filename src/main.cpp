@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       main.cpp                                                  */
-/*    Author:       Me                                                        */
-/*    Created:      Tue Apr 05 2022                                           */
+/*    Author:       C:\Users\REDACTED                                         */
+/*    Created:      Fri Sep 23 2022                                           */
 /*    Description:  V5 project                                                */
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
@@ -10,13 +10,14 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
+// Drivetrain           drivetrain    2, 1, 11        
 // Vision10             vision        10              
-// Controller1          controller                    
-// Expander9            triport       9               
-// RangeFinder9A        sonar         A, B            
 // Arm                  motor         4               
 // Hand                 motor         5               
-// Drivetrain           drivetrain    1, 2, 11        
+// Expander9            triport       9               
+// RangeFinder9A        sonar         A, B            
+// GPS20                gps           20              
+// Controller1          controller                    
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -29,8 +30,9 @@ event checkGreen = event();
 event checkDistance = event();
 
 void detection(){
+  //Move forward based on distance from target, account for length of robot.
   wait(1, seconds);
-  double travel = rangeFinder9A.distance(inches);
+  double travel = RangeFinder9A.distance(inches);
   double move = travel - 20;
   Drivetrain.driveFor(forward, move, inches);
 }
@@ -45,7 +47,6 @@ void visionLocation() {
 }
 
 void targetObject() {
-  //JPearman example
   int TARGET = 150; 
   int error = Vision10.largestObject.centerY - TARGET;  //How far off center is the item.
 
@@ -56,12 +57,11 @@ void targetObject() {
 
     // object is found and centered
     if( Vision10.largestObject.centerY > (TARGET-15) && Vision10.largestObject.centerY < (TARGET+15) ) {
-      driveTurn(0);
-      detection();
-      //Move forward based on distance from target, account for length of robot.
+      Drivetrain.stop();
     }
     else {
-      driveTurn(drive); //What does drive do?
+      Drivetrain.turnToRotation(drive, degrees); //What does drive do?
+      detection(); 
     }
 }
 
@@ -85,7 +85,7 @@ void hasMagentaCallback() { //Add target object somewhere when ready
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-  Drivetrain.setDriveVelocity(25, percent);
+  Drivetrain.setDriveVelocity(50, percent);
   targetObject();
   //checkMagenta(hasMagentaCallback);
   
