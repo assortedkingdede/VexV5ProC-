@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       main.cpp                                                  */
-/*    Author:       C:\Users\REDACTED                                         */
+/*    Author:       C:\Users\Benjamin.Eggers.CG                               */
 /*    Created:      Fri Sep 23 2022                                           */
 /*    Description:  V5 project                                                */
 /*                                                                            */
@@ -11,9 +11,7 @@
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // Drivetrain           drivetrain    2, 1, 11        
-// Vision10             vision        10              
-// Arm                  motor         4               
-// Hand                 motor         5               
+// Vision6              vision        6               
 // Expander9            triport       9               
 // RangeFinder9A        sonar         A, B            
 // GPS20                gps           20              
@@ -39,16 +37,16 @@ void detection(){
 
 void visionLocation() {
   printf("CenterX: ");
-  printf("%.2f", (double)Vision10.largestObject.centerX); 
+  printf("%.2f", (double)Vision6.largestObject.centerX); 
   printf("\n");
   printf("CenterY: ");
-  printf("%.2f", (double)Vision10.largestObject.centerY);
+  printf("%.2f", (double)Vision6.largestObject.centerY);
   printf("\n");
 }
 
 void targetObject() {
   int TARGET = 150; 
-  int error = Vision10.largestObject.centerY - TARGET;  //How far off center is the item.
+  int error = Vision6.largestObject.centerY - TARGET;  //How far off center is the item.
 
     // simple P control with a limit of 50
     int drive = error;
@@ -56,12 +54,12 @@ void targetObject() {
     if( drive < -50 ) drive = -50;
 
     // object is found and centered
-    if( Vision10.largestObject.centerY > (TARGET-15) && Vision10.largestObject.centerY < (TARGET+15) ) {
+    if( Vision6.largestObject.centerY > (TARGET-15) && Vision6.largestObject.centerY < (TARGET+15) ) {
       Drivetrain.stop();
     }
     else {
       Drivetrain.turnToRotation(drive, degrees); //What does drive do?
-      detection(); 
+      //detection(); 
     }
 }
 
@@ -72,8 +70,8 @@ void hasMagentaCallback() { //Add target object somewhere when ready
   Brain.Screen.setCursor(1, 1);
   Controller1.Screen.clearScreen();
   Controller1.Screen.setCursor(1,1);
-  Vision10.takeSnapshot(Vision10__SIG_1);
-  if (Vision10.objectCount > 0) {
+  Vision6.takeSnapshot(Vision6__SIG_1);
+  if (Vision6.objectCount > 0) {
     Brain.Screen.print("Magenta Object Found");
     Controller1.Screen.print("Magenta Object Found");
   } else {
