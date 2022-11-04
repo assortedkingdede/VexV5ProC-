@@ -8,24 +8,20 @@ using code = vision::code;
 brain  Brain;
 
 // VEXcode device constructors
-triport Expander9 = triport(PORT9);
-/*vex-vision-config:begin*/
-signature Vision10__SIG_1 = signature (1, 5531, 7521, 6526, 2967, 3735, 3351, 3.3, 0);
-vision Vision10 = vision (PORT10, 50, Vision10__SIG_1);
-/*vex-vision-config:end*/
+motor Motor3 = motor(PORT3, ratio36_1, false);
 controller Controller1 = controller(primary);
-sonar RangeFinder9A = sonar(Expander9.A);
-motor Arm = motor(PORT4, ratio18_1, false);
-motor Hand = motor(PORT5, ratio18_1, false);
-motor LeftDriveSmart = motor(PORT1, ratio18_1, false);
-motor RightDriveSmart = motor(PORT2, ratio18_1, true);
-inertial DrivetrainInertial = inertial(PORT11);
-smartdrive Drivetrain = smartdrive(LeftDriveSmart, RightDriveSmart, DrivetrainInertial, 319.19, 320, 40, mm, 1);
+motor Left = motor(PORT2, ratio36_1, false);
+motor Right = motor(PORT1, ratio36_1, false);
+motor MotorGroup10MotorA = motor(PORT10, ratio36_1, false);
+motor MotorGroup10MotorB = motor(PORT9, ratio36_1, true);
+motor_group MotorGroup10 = motor_group(MotorGroup10MotorA, MotorGroup10MotorB);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable
 bool RemoteControlCodeEnabled = true;
 // define variables used for controlling motors based on controller inputs
+bool Controller1LeftShoulderControlMotorsStopped = true;
+bool Controller1RightShoulderControlMotorsStopped = true;
 bool Controller1UpDownButtonsControlMotorsStopped = true;
 bool Controller1XBButtonsControlMotorsStopped = true;
 
@@ -35,27 +31,51 @@ int rc_auto_loop_function_Controller1() {
   // update the motors based on the input values
   while(true) {
     if(RemoteControlCodeEnabled) {
-      // check the ButtonUp/ButtonDown status to control Arm
-      if (Controller1.ButtonUp.pressing()) {
-        Arm.spin(forward);
+      // check the ButtonL1/ButtonL2 status to control Right
+      if (Controller1.ButtonL1.pressing()) {
+        Right.spin(forward);
+        Controller1LeftShoulderControlMotorsStopped = false;
+      } else if (Controller1.ButtonL2.pressing()) {
+        Right.spin(reverse);
+        Controller1LeftShoulderControlMotorsStopped = false;
+      } else if (!Controller1LeftShoulderControlMotorsStopped) {
+        Right.stop();
+        // set the toggle so that we don't constantly tell the motor to stop when the buttons are released
+        Controller1LeftShoulderControlMotorsStopped = true;
+      }
+      // check the ButtonR1/ButtonR2 status to control Left
+      if (Controller1.ButtonR1.pressing()) {
+        Left.spin(reverse);
+        Controller1RightShoulderControlMotorsStopped = false;
+      } else if (Controller1.ButtonR2.pressing()) {
+        Left.spin(forward);
+        Controller1RightShoulderControlMotorsStopped = false;
+      } else if (!Controller1RightShoulderControlMotorsStopped) {
+        Left.stop();
+        // set the toggle so that we don't constantly tell the motor to stop when the buttons are released
+        Controller1RightShoulderControlMotorsStopped = true;
+      }
+      // check the ButtonUp/ButtonDown status to control Motor3
+      if (Controller1.ButtonRight.pressing()) {
+        Motor3.spin(forward);
         Controller1UpDownButtonsControlMotorsStopped = false;
-      } else if (Controller1.ButtonDown.pressing()) {
-        Arm.spin(reverse);
+      } else if (Controller1.ButtonLeft.pressing()) {
+        Motor3.spin(reverse);
         Controller1UpDownButtonsControlMotorsStopped = false;
       } else if (!Controller1UpDownButtonsControlMotorsStopped) {
-        Arm.stop();
+        Motor3.stop();
         // set the toggle so that we don't constantly tell the motor to stop when the buttons are released
         Controller1UpDownButtonsControlMotorsStopped = true;
       }
-      // check the ButtonX/ButtonB status to control Hand
-      if (Controller1.ButtonX.pressing()) {
-        Hand.spin(forward);
+      // check the ButtonX/ButtonB status to control MotorGroup10
+      if (Controller1.ButtonB.pressing()) {
+        MotorGroup10.spin(forward);
         Controller1XBButtonsControlMotorsStopped = false;
-      } else if (Controller1.ButtonB.pressing()) {
-        Hand.spin(reverse);
+      } else if (Controller1.ButtonX.pressing()) {
+        MotorGroup10.spin(reverse);
         Controller1XBButtonsControlMotorsStopped = false;
       } else if (!Controller1XBButtonsControlMotorsStopped) {
-        Hand.stop();
+        MotorGroup10.stop();
         // set the toggle so that we don't constantly tell the motor to stop when the buttons are released
         Controller1XBButtonsControlMotorsStopped = true;
       }
@@ -72,20 +92,5 @@ int rc_auto_loop_function_Controller1() {
  * This should be called at the start of your int main function.
  */
 void vexcodeInit( void ) {
-  Brain.Screen.print("Device initialization...");
-  Brain.Screen.setCursor(2, 1);
-  // calibrate the drivetrain Inertial
-  wait(200, msec);
-  DrivetrainInertial.calibrate();
-  Brain.Screen.print("Calibrating Inertial for Drivetrain");
-  // wait for the Inertial calibration process to finish
-  while (DrivetrainInertial.isCalibrating()) {
-    wait(25, msec);
-  }
-  // reset the screen now that the calibration is complete
-  Brain.Screen.clearScreen();
-  Brain.Screen.setCursor(1,1);
   task rc_auto_loop_task_Controller1(rc_auto_loop_function_Controller1);
-  wait(50, msec);
-  Brain.Screen.clearScreen();
 }
